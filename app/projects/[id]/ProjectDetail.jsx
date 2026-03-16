@@ -83,13 +83,13 @@ Reviews: ${project.reviews.map(r=>r.noi_dung).join(" | ")}
 
 {"tom_tat":"2 câu mô tả","diem_manh":["a","b","c"],"rui_ro":["x","y"],"tiem_nang_diem":8,"thanh_khoan":"Cao","muc_gia":"Hợp lý","phu_hop_voi":["Ở thực","Đầu tư"],"khuyen_nghi":"Nên mua","ly_do":"1 câu","du_bao_gia":"1-2 câu","sentiment_diem":7.5,"sentiment_tom_tat":"1-2 câu","sentiment_canh_bao":null}`;
 
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
+  const res = await fetch("/api/analyze", {  // ← đổi sang gọi API route nội bộ
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 1000, messages: [{ role: "user", content: prompt }] }),
+    body: JSON.stringify({ project }),
   });
   const data = await res.json();
-  return JSON.parse(data.content[0].text.replace(/```json|```/g,"").trim());
+  return data;
 }
 
 const C = { bg:"#080f1a", surface:"rgba(255,255,255,0.04)", border:"rgba(255,255,255,0.08)", text:"#f8fafc", muted:"rgba(255,255,255,0.45)", accent:"#facc15", green:"#4ade80", blue:"#60a5fa", red:"#f87171" };
