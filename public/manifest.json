@@ -1,0 +1,16 @@
+{
+  "name": "MuaChungCu.net - Dự án Căn hộ Việt Nam",
+  "short_name": "MuaChungCu",
+  "description": "Tổng hợp thông tin dự án căn hộ, chung cư Việt Nam, phân tích bởi Claude AI",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#080f1a",
+  "theme_color": "#facc15",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "vi",
+  "icons": [
+    { "src": "/icons/icon-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable any" },
+    { "src": "/icons/icon-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable any" }
+  ]
+}
