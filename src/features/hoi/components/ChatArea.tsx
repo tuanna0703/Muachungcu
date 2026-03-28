@@ -46,62 +46,62 @@ export default function ChatArea({
         {typing && <Typing />}
       </div>
 
-      {/* Reply input */}
-      {msgs.length > 0 && status !== "ready" && (
-        <div style={{ padding: "10px 14px", borderTop: `1px solid ${T.border}`, display: "flex", gap: 8, flexShrink: 0, background: "#fff" }}>
-          <input
-            value={userReply}
-            onChange={(e) => onReplyChange(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && onReply()}
-            placeholder="Trả lời câu hỏi của AI…"
-            disabled={aiLoading}
-            style={{ ...inputS({ flex: 1, padding: "9px 12px", fontSize: 13, borderRadius: 10 }) }}
-            onFocus={(e) => (e.target.style.borderColor = T.red)}
-            onBlur={(e)  => (e.target.style.borderColor = T.border)}
-          />
-          <button
-            onClick={onReply}
-            disabled={aiLoading || !userReply.trim()}
-            style={{
-              width: 38, height: 38, borderRadius: 10,
-              background: T.red, color: "#fff",
-              border: "none", cursor: "pointer",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              opacity: aiLoading || !userReply.trim() ? 0.5 : 1, flexShrink: 0,
-            }}
-          >
-            <Send />
-          </button>
-        </div>
-      )}
-
-      {/* Quick actions */}
-      {showQuick && (
-        <div style={{ padding: "10px 14px", borderTop: `1px solid ${T.border}`, display: "flex", gap: 7, flexWrap: "wrap", flexShrink: 0, background: "#fff", alignItems: "center" }}>
-          {QUICK_ACTIONS.map((c) => (
+      {/* Bottom section: quick chips + reply input */}
+      {msgs.length > 0 && (
+        <div style={{ flexShrink: 0, borderTop: `1px solid ${T.border}`, background: "#fff" }}>
+          {showQuick && (
+            <div style={{ padding: "8px 14px 0", display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
+              {QUICK_ACTIONS.map((c) => (
+                <button
+                  key={c}
+                  onClick={() => onQuickPick(c)}
+                  style={{
+                    padding: "5px 10px", borderRadius: 99,
+                    border: `1.5px solid ${T.redMid}`, background: T.redSoft, color: T.red,
+                    fontSize: 11, fontWeight: 700, cursor: "pointer", fontFamily: "'Open Sans',sans-serif",
+                  }}
+                >
+                  {c}
+                </button>
+              ))}
+              <button
+                onClick={onShare}
+                style={{
+                  marginLeft: "auto", display: "flex", alignItems: "center", gap: 5,
+                  padding: "5px 10px", background: T.greenSoft, border: "1px solid #A7EDD0",
+                  borderRadius: 99, color: "#0E9960", fontSize: 11, fontWeight: 700,
+                  cursor: "pointer", fontFamily: "'Open Sans',sans-serif",
+                }}
+              >
+                <Share />Chia sẻ
+              </button>
+            </div>
+          )}
+          <div style={{ padding: "10px 14px", display: "flex", gap: 8, alignItems: "center" }}>
+            <input
+              value={userReply}
+              onChange={(e) => onReplyChange(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && onReply()}
+              placeholder={status === "ready" ? "Tiếp tục hỏi về dự án này…" : "Trả lời câu hỏi của AI…"}
+              disabled={aiLoading}
+              style={{ ...inputS({ flex: 1, padding: "9px 12px", fontSize: 13, borderRadius: 10 }) }}
+              onFocus={(e) => (e.target.style.borderColor = T.red)}
+              onBlur={(e)  => (e.target.style.borderColor = T.border)}
+            />
             <button
-              key={c}
-              onClick={() => onQuickPick(c)}
+              onClick={onReply}
+              disabled={aiLoading || !userReply.trim()}
               style={{
-                padding: "7px 12px", borderRadius: 99,
-                border: `1.5px solid ${T.redMid}`, background: T.redSoft, color: T.red,
-                fontSize: 11.5, fontWeight: 700, cursor: "pointer", fontFamily: "'Open Sans',sans-serif",
+                width: 38, height: 38, borderRadius: 10,
+                background: T.red, color: "#fff",
+                border: "none", cursor: "pointer",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                opacity: aiLoading || !userReply.trim() ? 0.5 : 1, flexShrink: 0,
               }}
             >
-              {c}
+              <Send />
             </button>
-          ))}
-          <button
-            onClick={onShare}
-            style={{
-              marginLeft: "auto", display: "flex", alignItems: "center", gap: 5,
-              padding: "7px 12px", background: T.greenSoft, border: "1px solid #A7EDD0",
-              borderRadius: 99, color: "#0E9960", fontSize: 12, fontWeight: 700,
-              cursor: "pointer", fontFamily: "'Open Sans',sans-serif",
-            }}
-          >
-            <Share />Chia sẻ
-          </button>
+          </div>
         </div>
       )}
     </>

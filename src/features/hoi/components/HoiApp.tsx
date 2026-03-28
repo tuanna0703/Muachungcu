@@ -144,8 +144,16 @@ export default function HoiApp() {
           {/* 2-col grid */}
           <div style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, minHeight: 0 }}>
             <div style={{ background: "#fff", border: `1px solid ${T.border}`, borderRadius: 16, overflow: "hidden", display: "flex", flexDirection: "column", boxShadow: "0 2px 12px rgba(229,57,53,.06)", minHeight: 0 }}>
-              <div style={{ padding: "12px 16px", borderBottom: `1px solid ${T.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
+              <div style={{ padding: "12px 16px", borderBottom: `1px solid ${T.border}`, display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
                 <div style={{ fontSize: 13, fontWeight: 800 }}>Trò chuyện AI</div>
+                {chat.msgs.length > 0 && (
+                  <button
+                    onClick={chat.reset}
+                    style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 5, padding: "4px 10px", background: "#111827", color: "#fff", border: "none", borderRadius: 99, fontSize: 11, fontWeight: 700, cursor: "pointer", fontFamily: "'Open Sans',sans-serif" }}
+                  >
+                    <Reset />Hỏi câu khác
+                  </button>
+                )}
               </div>
               <ChatArea
                 msgs={chat.msgs} typing={chat.typing} aiLoading={chat.aiLoading}
@@ -166,42 +174,62 @@ export default function HoiApp() {
             </div>
           </div>
 
-          {/* Input card */}
-          <div style={{ background: "#fff", border: `1px solid ${T.border}`, borderRadius: 16, overflow: "hidden", flexShrink: 0, boxShadow: "0 2px 12px rgba(229,57,53,.06)" }}>
-            <div style={{ padding: "10px 18px 8px", borderBottom: `1px solid ${T.border}`, background: "#FAFBFB" }}>
-              <div style={{ fontSize: 13, fontWeight: 800, letterSpacing: -0.3 }}>{BRAND.tagline}</div>
+          {/* Input card — only shown before chat starts */}
+          {chat.msgs.length === 0 && (
+            <div style={{ background: "#fff", border: `1px solid ${T.border}`, borderRadius: 16, overflow: "hidden", flexShrink: 0, boxShadow: "0 2px 12px rgba(229,57,53,.06)" }}>
+              <div style={{ padding: "10px 18px 8px", borderBottom: `1px solid ${T.border}`, background: "#FAFBFB" }}>
+                <div style={{ fontSize: 13, fontWeight: 800, letterSpacing: -0.3 }}>{BRAND.tagline}</div>
+              </div>
+              <div style={{ padding: "12px 18px 14px", background: "#FAFBFB" }}>
+                <InputZone inputTxt={inputTxt} onInput={setInputTxt} onSubmit={() => chat.startFlow(inputTxt)} aiLoading={chat.aiLoading} />
+              </div>
             </div>
-            <div style={{ padding: "12px 18px 14px", background: "#FAFBFB" }}>
-              <InputZone inputTxt={inputTxt} onInput={setInputTxt} onSubmit={() => chat.startFlow(inputTxt)} aiLoading={chat.aiLoading} />
-            </div>
-          </div>
+          )}
         </div>
       )}
 
       {/* ══ DESKTOP ══ */}
       {isDsk && (
         <div style={{ flex: 1, overflow: "hidden", display: "flex", maxWidth: 1380, width: "100%", margin: "0 auto", padding: "18px 20px 0", gap: 14 }}>
-          {/* Left panel */}
+          {/* Left panel — phase 1: input form / phase 2: chat */}
           <div style={{ width: 460, flexShrink: 0, background: "#fff", border: `1px solid ${T.border}`, borderRadius: 16, overflow: "hidden", display: "flex", flexDirection: "column", boxShadow: "0 2px 16px rgba(229,57,53,.06)" }}>
-            <div style={{ padding: "16px 20px 14px", borderBottom: `1px solid ${T.border}`, flexShrink: 0, background: "#FAFBFB" }}>
-              <div style={{ fontSize: 15, fontWeight: 800, letterSpacing: -0.4, lineHeight: 1.2, marginBottom: 2 }}>{BRAND.tagline}</div>
-              <div style={{ fontSize: 11.5, color: T.muted }}>Dán tin rao hoặc đặt câu hỏi về bất kỳ dự án chung cư nào</div>
-            </div>
-            <div style={{ flex: 1, overflow: "hidden", display: "flex", flexDirection: "column" }}>
-              <ChatArea
-                msgs={chat.msgs} typing={chat.typing} aiLoading={chat.aiLoading}
-                status={chat.status} showQuick={chat.showQuick}
-                userReply={chat.userReply} initials={userInitials}
-                chatRef={chat.chatRef}
-                onReplyChange={chat.setUserReply}
-                onReply={chat.sendReply}
-                onShare={() => openShare()}
-                onQuickPick={(q) => chat.setUserReply(q)}
-              />
-            </div>
-            <div style={{ padding: "14px 18px", borderTop: `1px solid ${T.border}`, background: "#FAFBFB", flexShrink: 0 }}>
-              <InputZone inputTxt={inputTxt} onInput={setInputTxt} onSubmit={() => chat.startFlow(inputTxt)} aiLoading={chat.aiLoading} />
-            </div>
+            {chat.msgs.length === 0 ? (
+              /* ── Phase 1: Input form ── */
+              <>
+                <div style={{ padding: "16px 20px 14px", borderBottom: `1px solid ${T.border}`, flexShrink: 0, background: "#FAFBFB" }}>
+                  <div style={{ fontSize: 15, fontWeight: 800, letterSpacing: -0.4, lineHeight: 1.2, marginBottom: 2 }}>{BRAND.tagline}</div>
+                  <div style={{ fontSize: 11.5, color: T.muted }}>Dán tin rao hoặc đặt câu hỏi về bất kỳ dự án chung cư nào</div>
+                </div>
+                <div style={{ flex: 1, overflowY: "auto", padding: "18px 20px 20px" }}>
+                  <InputZone inputTxt={inputTxt} onInput={setInputTxt} onSubmit={() => chat.startFlow(inputTxt)} aiLoading={chat.aiLoading} />
+                </div>
+              </>
+            ) : (
+              /* ── Phase 2: Chat window ── */
+              <>
+                <div style={{ padding: "11px 16px 10px", borderBottom: `1px solid ${T.border}`, display: "flex", alignItems: "center", gap: 8, flexShrink: 0, background: "#FAFBFB" }}>
+                  <div style={{ fontSize: 13, fontWeight: 800 }}>Trò chuyện AI</div>
+                  <button
+                    onClick={chat.reset}
+                    style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 5, padding: "5px 12px", background: "#111827", color: "#fff", border: "none", borderRadius: 99, fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "'Open Sans',sans-serif" }}
+                  >
+                    <Reset />Hỏi câu khác
+                  </button>
+                </div>
+                <div style={{ flex: 1, overflow: "hidden", display: "flex", flexDirection: "column" }}>
+                  <ChatArea
+                    msgs={chat.msgs} typing={chat.typing} aiLoading={chat.aiLoading}
+                    status={chat.status} showQuick={chat.showQuick}
+                    userReply={chat.userReply} initials={userInitials}
+                    chatRef={chat.chatRef}
+                    onReplyChange={chat.setUserReply}
+                    onReply={chat.sendReply}
+                    onShare={() => openShare()}
+                    onQuickPick={(q) => chat.setUserReply(q)}
+                  />
+                </div>
+              </>
+            )}
           </div>
 
           {/* Right panel */}
@@ -225,11 +253,11 @@ export default function HoiApp() {
         </footer>
       )}
 
-      {/* FAB: Hỏi câu khác */}
-      {chat.status === "ready" && (
+      {/* FAB: Hỏi câu khác — mobile only (desktop/tablet have inline reset button) */}
+      {isMob && chat.status === "ready" && (
         <button
           onClick={chat.reset}
-          style={{ position: "fixed", bottom: isMob ? 68 : 20, right: isMob ? 14 : 28, background: "#111827", color: "#fff", padding: "10px 18px", borderRadius: 99, fontSize: 13, fontWeight: 700, display: "flex", alignItems: "center", gap: 7, boxShadow: "0 4px 20px rgba(17,24,39,.22)", border: "none", cursor: "pointer", fontFamily: "'Open Sans',sans-serif", zIndex: 900 }}
+          style={{ position: "fixed", bottom: 68, right: 14, background: "#111827", color: "#fff", padding: "10px 18px", borderRadius: 99, fontSize: 13, fontWeight: 700, display: "flex", alignItems: "center", gap: 7, boxShadow: "0 4px 20px rgba(17,24,39,.22)", border: "none", cursor: "pointer", fontFamily: "'Open Sans',sans-serif", zIndex: 900 }}
         >
           <Reset />Hỏi câu khác
         </button>
