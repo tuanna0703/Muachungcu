@@ -7,8 +7,8 @@ export const metadata: Metadata = {
   openGraph: {
     title:       "hỏi.muachungcu.net — AI tra cứu chung cư VN",
     description: "Dán tin rao hoặc đặt câu hỏi — AI phân tích ngay.",
-    url:         "https://hoi.muachungcu.net",
-    siteName:    "MuaChungCư",
+    url:         "https://muachungcu.net",
+    siteName:    "Mua Chung Cư",
   },
 };
 
