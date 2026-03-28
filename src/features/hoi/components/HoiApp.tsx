@@ -148,7 +148,7 @@ export default function HoiApp() {
                 <div style={{ fontSize: 13, fontWeight: 800 }}>Trò chuyện AI</div>
                 {chat.msgs.length > 0 && (
                   <button
-                    onClick={chat.reset}
+                    onClick={() => { chat.reset(); setInputTxt(""); }}
                     style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 5, padding: "4px 10px", background: "#111827", color: "#fff", border: "none", borderRadius: 99, fontSize: 11, fontWeight: 700, cursor: "pointer", fontFamily: "'Open Sans',sans-serif" }}
                   >
                     <Reset />Hỏi câu khác
@@ -210,7 +210,7 @@ export default function HoiApp() {
                 <div style={{ padding: "11px 16px 10px", borderBottom: `1px solid ${T.border}`, display: "flex", alignItems: "center", gap: 8, flexShrink: 0, background: "#FAFBFB" }}>
                   <div style={{ fontSize: 13, fontWeight: 800 }}>Trò chuyện AI</div>
                   <button
-                    onClick={chat.reset}
+                    onClick={() => { chat.reset(); setInputTxt(""); }}
                     style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 5, padding: "5px 12px", background: "#111827", color: "#fff", border: "none", borderRadius: 99, fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "'Open Sans',sans-serif" }}
                   >
                     <Reset />Hỏi câu khác
@@ -256,7 +256,7 @@ export default function HoiApp() {
       {/* FAB: Hỏi câu khác — mobile only (desktop/tablet have inline reset button) */}
       {isMob && chat.status === "ready" && (
         <button
-          onClick={chat.reset}
+          onClick={() => { chat.reset(); setInputTxt(""); }}
           style={{ position: "fixed", bottom: 68, right: 14, background: "#111827", color: "#fff", padding: "10px 18px", borderRadius: 99, fontSize: 13, fontWeight: 700, display: "flex", alignItems: "center", gap: 7, boxShadow: "0 4px 20px rgba(17,24,39,.22)", border: "none", cursor: "pointer", fontFamily: "'Open Sans',sans-serif", zIndex: 900 }}
         >
           <Reset />Hỏi câu khác
