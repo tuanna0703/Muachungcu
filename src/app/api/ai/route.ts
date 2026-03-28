@@ -42,7 +42,7 @@ LUÔN trả về JSON (không có text ngoài JSON):
    Body: { messages: Array<{ role: "user"|"assistant", content: string }> }
 ═══════════════════════════════════════════════════════════════════ */
 export async function POST(req: NextRequest) {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     return NextResponse.json({ error: "API key chưa được cấu hình." }, { status: 500 });
   }
@@ -60,29 +60,27 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const upstream = await fetch("https://api.anthropic.com/v1/messages", {
+    const upstream = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Content-Type":      "application/json",
-        "x-api-key":         apiKey,
-        "anthropic-version": "2023-06-01",
+        "Content-Type":  "application/json",
+        "Authorization": `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model:      "claude-sonnet-4-20250514",
+        model:      "gpt-4o",
         max_tokens: 1500,
-        system:     SYSTEM_PROMPT,
-        messages,
+        messages:   [{ role: "system", content: SYSTEM_PROMPT }, ...messages],
       }),
     });
 
     if (!upstream.ok) {
       const err = await upstream.text();
-      console.error("[/api/ai] Anthropic error:", err);
+      console.error("[/api/ai] OpenAI error:", err);
       return NextResponse.json({ error: `Lỗi từ AI: ${upstream.status}` }, { status: 502 });
     }
 
     const data = await upstream.json();
-    const raw  = (data.content?.[0]?.text as string) ?? "{}";
+    const raw  = (data.choices?.[0]?.message?.content as string) ?? "{}";
 
     let parsed: unknown;
     try {
